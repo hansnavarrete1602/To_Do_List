@@ -1,0 +1,55 @@
+{% extends 'base/principal.html' %}
+
+
+{% block content %}
+
+ <div class="barra-superior">
+    <div>
+        <h1>Bienvenido {{ request.user|title }}</h1>
+        <h3 style="margin:0">Tienes <i>{{ count }}</i> tarea{{ count|pluralize }} incompleta{{ count|pluralize }}</h3>
+    </div>
+
+     <hr>
+    <div class="logo_">
+        <img src="https://kioskosinformaticos.com/wp-content/uploads/2022/06/logo-1.png" width="175" height="75" alt="Kioskos Informaticos" data-height-percentage="69">
+        {% if request.user.is_authenticated %}
+            <a style="color: #096262; background-color: #48c5a8; width:auto; height: 30px;" href="{% url 'logout' %}">logout</a>
+        {% else %}
+            <a style="color: #096262; background-color: #48c5a8; width:auto; height: 30px;" href="{% url 'login' %}">login</a>
+        {% endif %}
+    </div>
+ </div>
+
+<div id="envoltorio-agregar-buscar">
+    <form method="GET" style="margin-top: 20px; display: flex;">
+        <input type="text" name="area_buscar" value="{{ valor_buscado }}">
+        <input class="button" type="submit" value="buscar">
+    </form> <!-- control + shift + / -->
+    <a id="enlace-agregar" href="{% url 'crear-tarea' %}">&#x271A;</a>
+</div>
+
+<div class="envoltorio-items">
+    {% if Tareas %}
+        {% for tarea in Tareas %}
+            <div class="envoltorio-tarea">
+                {% if tarea.completo %}
+                <div class="titulo-tarea">
+                    <div class="icono-tarea-completa"></div>
+                    <i><s><a href="{% url 'editar-tarea' tarea.id %}">{{ tarea }}</a></s></i>
+                </div>
+                <a class="enlace-eliminar" href="{% url 'eliminar-tarea' tarea.id %}">&#x274C;</a>
+                {% else %}
+                    <div class="titulo-tarea">
+                    <div class="icono-tarea-incompleta"></div>
+                    <a href="{% url 'editar-tarea' tarea.id %}">{{ tarea }}</a>
+                </div>
+                <a class="enlace-eliminar" href="{% url 'eliminar-tarea' tarea.id %}">&#x274C;</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3>No hay elementos para mostrar en la lista</h3>
+    {% endif %}
+</div>
+
+{% endblock content %}
